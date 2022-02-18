@@ -3,15 +3,14 @@
 import os
 
 class Config(object):
-    SECRET_KEY = os.environ['SECRET_KEY']
-    SQLALCHEMY_DATABASE_URI = os.environ['SQLALCHEMY_DATABASE_URI']
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SECRET_KEY = os.getenv('SECRET_KEY')
+
     
-class ConfiguracionDesarrollo(Config):
+class DevelopmentConfig(Config):
     DEVELOPMENT = True
     DEBUG = True
     
-class ConfiguracionProduccion(Config):
+class ProductionConfig(Config):
     DEBUG = False
     
 
