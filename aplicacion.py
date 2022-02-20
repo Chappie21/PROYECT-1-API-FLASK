@@ -12,13 +12,12 @@ from config import *
 
 app = Flask(__name__)
 app.config.from_object(DevelopmentConfig)
-
 load_dotenv()
 
 #CONFIGURACIÓN JWT#
 
 app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY')
-app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours = 1)
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours = 2)
 app.config['JWT_REFRESH_TOKEN_EXPIRES'] = timedelta(days = 25)
 JWT = JWTManager(app)
 
