@@ -4,3 +4,10 @@ venv
 #ARCHIVO DE CONFIGURACIÓN DE VARIABLES DE ENTORNO
 .env
 
+#PYTHON
+*_pycache_/
+*-py[cod]
+*$py.class
+.Python
+
+
