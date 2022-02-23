@@ -5,7 +5,7 @@ venv
 .env
 
 #PYTHON
-_pycache_/
+*_pycache_/
 *-py[cod]
 *$py.class
 .Python
