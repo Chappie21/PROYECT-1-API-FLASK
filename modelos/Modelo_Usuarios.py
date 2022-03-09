@@ -2,30 +2,26 @@
 
 from werkzeug.security import generate_password_hash, check_password_hash
 from aplicacion import BD
+import mongoengine
 
 #MODELO DE USUARIOS#
 
-class ModeloUsuario(BD.Model):
-    
-    #NOMBRE DE LA TABLA#
-    __tablename__ = "usuarios"
+class ModeloUsuario(BD.Document):
     
     #ATRIBUTOS PARA EL USUARIO#
     
-    idUsuario = BD.Column(BD.Integer, primary_key = True)
-    nombre = BD.Column(BD.String(60))
-    apellido = BD.Column(BD.String(60))
-    email = BD.Column(BD.Text, unique = True)
-    clave = BD.Column(BD.Text)
-    
-    #CONSTRUCTOR#
-    
-    def __init__(self, nombre, apellido, email, clave):
-        self.nombre = nombre
-        self.apellido = apellido
-        self.email = email
-        self.clave = self.Encriptar(clave)
-    
+    nombre = BD.StringField(required = True, max_length = 60)
+    apellido = BD.StringField(required = True, max_length = 50)
+    email = BD.StringField(required = True)
+    emailVisible = BD.BooleanField(default = True)
+    fotoPerfil = BD.StringField()
+    sexo = BD.StringField(max_length = 7)
+    sexoVisible = BD.BooleanField(default = True)    
+    clave = BD.StringField(required = True)
+    topPeliculas = BD.ListField(BD.ReferenceField('ModeloPelicula', reverse_delete_rule = mongoengine.CASCADE))
+    topVisible = BD.BooleanField(default = True)
+    rol = BD.StringField(max_length = 25)
+        
     #ENCRIPTACIÓN DE CONTRASEÑA#
     
     def Encriptar(self, clave):
