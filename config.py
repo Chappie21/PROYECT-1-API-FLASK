@@ -11,7 +11,7 @@ class DevelopmentConfig(Config):
     DEBUG = True
     
 class ProductionConfig(Config):
-    debug = False
+    DEBUG = False
     
 
 

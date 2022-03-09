@@ -5,8 +5,9 @@ import os
 from dotenv import load_dotenv
 from flask import Flask
 from flask_jwt_extended import JWTManager
-from flask_sqlalchemy import SQLAlchemy
+from flask_mongoengine import MongoEngine
 from config import *
+from modelos.Modelo_Usuarios import ModeloUsuario
 
 #INSTANCIA Y CONFIGURACIÓN DE LA APLICACIÓN FLASK#
 
@@ -21,16 +22,12 @@ app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours = 2)
 app.config['JWT_REFRESH_TOKEN_EXPIRES'] = timedelta(days = 25)
 JWT = JWTManager(app)
 
-#CONFIGURACIÓN SQLALCHEMY#
+#CONFIGURACIÓN MONGOENGINE#
 
-URI = os.getenv('URI_BBDD')
-app.config['SQLALCHEMY_DATABASE_URI'] = URI
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-BD = SQLAlchemy(app)
+app.config['MONGODB_SETTINGS'] = {'host':os.getenv('URI_BBDD')}
+BD = MongoEngine(app)
 
 #IMPORTACIÓN Y REGISTRO DE RUTAS MEDIANTE BLUEPRINTS#
 
-from controladores.Usuario import RutasUsuario
 
-app.register_blueprint(RutasUsuario)
  
