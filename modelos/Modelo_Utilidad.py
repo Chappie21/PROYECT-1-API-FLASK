@@ -3,6 +3,7 @@
 from aplicacion import BD
 import mongoengine
 
+
 class ModeloUtilidad(BD.Document):
     
     usuario = BD.ReferenceField('ModeloUsuario', reverse_delete_rule = mongoengine.CASCADE)

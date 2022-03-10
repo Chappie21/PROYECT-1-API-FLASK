@@ -3,6 +3,7 @@
 from aplicacion import BD
 import mongoengine
 
+
 class ModeloComentario(BD.Document):
     
     #ATRIBUTOS DEL COMENTARIO#
@@ -12,4 +13,3 @@ class ModeloComentario(BD.Document):
     descripcion = BD.StringField(required = True)
     fecha = BD.DateTimeField()
     calificacion = BD.DecimalField( default = 0 )
-    utilidad = BD.ListField(BD.ReferenceField('ModeloUtilidad', reverse_delete_rule = mongoengine.CASCADE))
