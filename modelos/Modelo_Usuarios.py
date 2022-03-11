@@ -13,11 +13,11 @@ class ModeloUsuario(BD.Document):
     nombre = BD.StringField(required = True, max_length = 60)
     apellido = BD.StringField(required = True, max_length = 50)
     email = BD.StringField(required = True, unique = True)
-    visible_Email = BD.BooleanField(default = True)
+    visibleEmail = BD.BooleanField(default = True)
     fotoPerfil = BD.StringField(default = "")   
     clave = BD.StringField(required = True)
-    visible_Top = BD.BooleanField(default = True)
-    isAdmin = BD.BooleanField(default = True)
+    visibleTop = BD.BooleanField(default = True)
+    esAdmin = BD.BooleanField(default = False)
         
     #ENCRIPTACIÓN DE CONTRASEÑA#
     
@@ -26,5 +26,5 @@ class ModeloUsuario(BD.Document):
     
     #VERIFICAR CONTRASEÑA#
     
-    def Verificar(self, clave):
-        return check_password_hash(self.clave, clave)
+    def Verificar(clavebd, clave):
+        return check_password_hash(clavebd, clave)

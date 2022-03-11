@@ -15,6 +15,6 @@ class ModeloPelicula(BD.Document):
      fechaEstreno = BD.DateTimeField()
      trailers = BD.ListField(BD.StringField(), default = [])
      imagenes = BD.ListField(BD.StringField(), default = [])
-     portada = BD.StringField()
-     descripcion = BD.StringField()
+     portada = BD.StringField(default = "")
+     descripcion = BD.StringField(default = "")
      calificacion = BD.DecimalField( default = 0 )
