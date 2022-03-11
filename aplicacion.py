@@ -7,7 +7,6 @@ from flask import Flask
 from flask_jwt_extended import JWTManager
 from flask_mongoengine import MongoEngine
 from config import *
-from modelos.Modelo_Usuarios import ModeloUsuario
 
 #INSTANCIA Y CONFIGURACIÓN DE LA APLICACIÓN FLASK#
 
@@ -24,10 +23,14 @@ JWT = JWTManager(app)
 
 #CONFIGURACIÓN MONGOENGINE#
 
-app.config['MONGODB_SETTINGS'] = {'host':os.getenv('URI_BBDD')}
+app.config['MONGODB_SETTINGS'] = {'host':os.getenv('URI_BBDD'), 'db':'Pelitacos_BD'}
 BD = MongoEngine(app)
 
 #IMPORTACIÓN Y REGISTRO DE RUTAS MEDIANTE BLUEPRINTS#
+
+from controladores.Rutas_Usuarios import RutasDeUsuario
+
+app.register_blueprint(RutasDeUsuario)
 
 
  
