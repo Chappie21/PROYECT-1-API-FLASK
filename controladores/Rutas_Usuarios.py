@@ -11,18 +11,25 @@ RutasDeUsuario = Blueprint('RutasDeUsuario', __name__)
 @RutasDeUsuario.route('/Usuario/RegistroUsuario', methods = ['POST'])
 def RegistroNUsuario():
     
+    #RECEPCIÓN DE DATOS#
+    Datos = request.json
+    emailU = Datos['email']
+    nombreU = Datos['nombre']
+    apellidoU = Datos['apellido']
+    claveU = Datos['clave']
+    
     #VALIDACIÓN DE EXISTENCIA DE USUARIO A CREAR#
     
-    Existencia_Usuario = ModeloUsuario.objects(email = request.json.get('email'))
+    Existencia_Usuario = ModeloUsuario.objects(email = emailU)
     if Existencia_Usuario:
         return jsonify({'mensaje':'El usuario ya se encuentra registrado'}), 409
     
     #CREACIÓN DE NUEVO USUARIO#
     NuevoUsuario = ModeloUsuario(
-        nombre = request.json.get("nombre"),
-        apellido = request.json.get("apellido"),
-        email = request.json.get("email"),
-        clave = ModeloUsuario.Encriptar(request.json.get("clave"))
+        nombre = nombreU,
+        apellido = apellidoU,
+        email = emailU,
+        clave = ModeloUsuario.Encriptar(claveU)
     ).save()
     
     return jsonify({"mensaje":"Usuario creado satisfactoriamente"}), 201
@@ -31,10 +38,15 @@ def RegistroNUsuario():
 @RutasDeUsuario.route('/Usuario/InicioSesion', methods = ['POST'])
 def InicioSesion():
     
+    #RECEPCIÓN DE DATOS#
+    Datos = request.json
+    emailU = Datos['email']
+    claveU = Datos['clave']
+    
     #VALIDACIÓN DE USUARIO E INFORMACIÓN#
     
-    Usuario_Sesion = ModeloUsuario.objects(email = request.json.get('email')).first()
-    if Usuario_Sesion is not None and ModeloUsuario.Verificar(Usuario_Sesion.clave, request.json.get('clave')):
+    Usuario_Sesion = ModeloUsuario.objects(email = emailU).first()
+    if Usuario_Sesion is not None and ModeloUsuario.Verificar(Usuario_Sesion.clave, claveU):
     
         #SE CREA EL TOKEN DE VALIDACIÓN DE SESIÓN PARA EL USUARIO#
         access_token = create_access_token(identity = Usuario_Sesion.email)
