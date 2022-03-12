@@ -20,7 +20,7 @@ def RegistroNUsuario():
     
     #VALIDACIÓN DE EXISTENCIA DE USUARIO A CREAR#
     
-    Existencia_Usuario = ModeloUsuario.objects(email = emailU)
+    Existencia_Usuario = ModeloUsuario.objects(email = emailU).first()
     if Existencia_Usuario:
         return jsonify({'mensaje':'El usuario ya se encuentra registrado'}), 409
     
@@ -64,6 +64,50 @@ def InicioSesion():
     else:
         return jsonify({"mensaje":"error al iniciar sesión, credenciales incorrectas o no se encuentra registrado", "status":"409"}), 409
 
+#EDICIÓN DE USUARIO - DATOS BÁSICOS#
+@RutasDeUsuario.route('/Usuario/EdicionUsuario', methods = ['PUT'])
+@jwt_required()
+def EdicionUsuario():
+    
+    #RECEPCIÓN DE DATOS#
+    Datos = request.json
+    nombreU = Datos['nombre']
+    apellidoU = Datos['apellido']
+    emailU = Datos['email']
+    fotoPerfilU = Datos['fotoPerfil']
+    visibleEmailU = Datos['visibleEmail']
+    visibleTopU = Datos['visibleTop']
+    
+    #UBICACIÓN DEL USUARIO#
+    Usuario = ModeloUsuario.objects(email = get_jwt_identity()).first()
+    
+    if Usuario is not None:
+        
+        Usuario.update(nombre = nombreU, apellido = apellidoU, email = emailU, fotoPerfil = fotoPerfilU, visibleEmail = visibleEmailU, visibleTop = visibleTopU)
+        Usuario.reload()
+        
+        return jsonify(
+                mensaje = "Cambios realizados satisfactoriamente",
+                nombre = Usuario.nombre,
+                apellido = Usuario.apellido,
+                email = Usuario.email,
+                fotoPerfil = Usuario.fotoPerfil,
+                visibleEmail = Usuario.visibleEmail,
+                visibleTop = Usuario.visibleTop
+            ), 201
+
+    else:
+        
+        return jsonify({'mensaje':"Usuario no encontrado", "status":"409"}), 409
+        
+    
+    
+    
+    
+    
+    
+        
+    return ""
 
 
     
