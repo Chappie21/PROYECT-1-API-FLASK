@@ -22,7 +22,7 @@ def RegistroNUsuario():
     
     Existencia_Usuario = ModeloUsuario.objects(email = emailU).first()
     if Existencia_Usuario:
-        return jsonify({'mensaje':'El usuario ya se encuentra registrado'}), 409
+        return jsonify({'mensaje':'El usuario ya se encuentra registrado', "status":"409"}), 409
     
     #CREACIÓN DE NUEVO USUARIO#
     NuevoUsuario = ModeloUsuario(
