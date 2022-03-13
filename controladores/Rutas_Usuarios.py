@@ -8,7 +8,7 @@ RutasDeUsuario = Blueprint('RutasDeUsuario', __name__)
 
 
 #REGISTRO DE USUARIO#
-@RutasDeUsuario.route('/Usuario', methods = ['POST'])
+@RutasDeUsuario.route('/usuario', methods = ['POST'])
 def RegistroNUsuario():
     
     #RECEPCIÓN DE DATOS#
@@ -41,7 +41,7 @@ def RegistroNUsuario():
         ), 201
 
 #INICIO SE SESIÓN#
-@RutasDeUsuario.route('/Usuario/Autenticar', methods = ['POST'])
+@RutasDeUsuario.route('/usuario/autenticar', methods = ['POST'])
 def InicioSesion():
     
     #RECEPCIÓN DE DATOS#
@@ -71,7 +71,7 @@ def InicioSesion():
         return jsonify({"mensaje":"error al iniciar sesión, credenciales incorrectas o no se encuentra registrado", "status":"409"}), 409
 
 #EDICIÓN DE USUARIO - DATOS BÁSICOS#
-@RutasDeUsuario.route('/Usuario/Edicion', methods = ['PUT'])
+@RutasDeUsuario.route('/usuario', methods = ['PUT'])
 @jwt_required()
 def EdicionUsuario():
     
@@ -107,7 +107,7 @@ def EdicionUsuario():
         return jsonify({'mensaje':"Usuario no encontrado", "status":"409"}), 409
     
 #EDICIÓN DE CONTRASEÑA DE USUARIO#
-@RutasDeUsuario.route('/Usuario/EdicionClave', methods = ['PUT'])
+@RutasDeUsuario.route('/usuario/edicionClave', methods = ['PUT'])
 @jwt_required() 
 def EdicionClave():
     
@@ -136,7 +136,7 @@ def EdicionClave():
         ), 409        
     
 #VER DATOS DEL USUARIO#
-@RutasDeUsuario.route('/Usuario/Ver', methods = ['GET'])
+@RutasDeUsuario.route('/usuario', methods = ['GET'])
 @jwt_required()
 def VerUsuario():
     
@@ -159,7 +159,7 @@ def VerUsuario():
     ), 200
     
 #ELIMINACIÓN DE USUARIO#
-@RutasDeUsuario.route('/Usuario/Eliminar', methods = ['DELETE'])
+@RutasDeUsuario.route('/usuario', methods = ['DELETE'])
 @jwt_required()
 def EliminarUsuario():
     
