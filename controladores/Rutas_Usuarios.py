@@ -8,7 +8,7 @@ RutasDeUsuario = Blueprint('RutasDeUsuario', __name__)
 
 
 #REGISTRO DE USUARIO#
-@RutasDeUsuario.route('/Usuario/RegistroUsuario', methods = ['POST'])
+@RutasDeUsuario.route('/Usuario', methods = ['POST'])
 def RegistroNUsuario():
     
     #RECEPCIÓN DE DATOS#
@@ -41,7 +41,7 @@ def RegistroNUsuario():
         ), 201
 
 #INICIO SE SESIÓN#
-@RutasDeUsuario.route('/Usuario/InicioSesion', methods = ['POST'])
+@RutasDeUsuario.route('/Usuario/Autenticar', methods = ['POST'])
 def InicioSesion():
     
     #RECEPCIÓN DE DATOS#
@@ -71,7 +71,7 @@ def InicioSesion():
         return jsonify({"mensaje":"error al iniciar sesión, credenciales incorrectas o no se encuentra registrado", "status":"409"}), 409
 
 #EDICIÓN DE USUARIO - DATOS BÁSICOS#
-@RutasDeUsuario.route('/Usuario/EdicionUsuario', methods = ['PUT'])
+@RutasDeUsuario.route('/Usuario/Edicion', methods = ['PUT'])
 @jwt_required()
 def EdicionUsuario():
     
@@ -134,6 +134,51 @@ def EdicionClave():
             mensaje = "No se han llenado los campos o la contraseña actual es incorrecta.",
             status = "409"
         ), 409        
+    
+#VER DATOS DEL USUARIO#
+@RutasDeUsuario.route('/Usuario/Ver', methods = ['GET'])
+@jwt_required()
+def VerUsuario():
+    
+    #RECOLECCIÓN DE DATOS DEL USUARIO#
+    
+    Usuario = ModeloUsuario.objects( email = get_jwt_identity()).first()
+    
+    #PELÍCULAS QUE SIGUE EL USUARIO#
+    
+    #COMENTARIOS MÁS RELEVANTES DEL USUARIO#
+    
+    return jsonify(
+        nombre = Usuario.nombre,
+        apellido = Usuario.apellido,
+        emailU = Usuario.email,
+        fotoPerfil = Usuario.fotoPerfil,
+        visibleTop = Usuario.visibleTop,
+        visibleEmail = Usuario.visibleEmail,
+        status = 200
+    ), 200
+    
+#ELIMINACIÓN DE USUARIO#
+@RutasDeUsuario.route('/Usuario/Eliminar', methods = ['DELETE'])
+@jwt_required()
+def EliminarUsuario():
+    
+    #VERFICIACIÓN DEL USUARIO A ELIMINAR#
+    Usuario = ModeloUsuario.objects( email = get_jwt_identity()).first()
+    if Usuario:
+        
+        Usuario.delete()
+        return jsonify(
+            mensaje = "Se ha eliminado el usuario satisfactoriamente.",
+            status = "200"
+        )
+        
+    else:
+        
+        return jsonify(
+            mensaje = "El usuario no existe.",
+            status = "409"
+        )
     
     
     
