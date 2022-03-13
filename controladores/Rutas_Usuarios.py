@@ -135,6 +135,30 @@ def EdicionClave():
             status = "409"
         ), 409        
     
+#VER DATOS DEL USUARIO#
+@RutasDeUsuario.route('/Usuario/VerUsuario', methods = ['GET'])
+@jwt_required()
+def VerUsuario():
+    
+    #RECOLECCIÓN DE DATOS DEL USUARIO#
+    
+    Usuario = ModeloUsuario.objects( email = get_jwt_identity()).first()
+    
+    #PELÍCULAS QUE SIGUE EL USUARIO#
+    
+    #COMENTARIOS MÁS RELEVANTES DEL USUARIO#
+    
+    return jsonify(
+        nombre = Usuario.nombre,
+        apellido = Usuario.apellido,
+        emailU = Usuario.email,
+        fotoPerfil = Usuario.fotoPerfil,
+        visibleTop = Usuario.visibleTop,
+        visibleEmail = Usuario.visibleEmail,
+        status = 200
+    ), 200
+    
+    
     
     
     
