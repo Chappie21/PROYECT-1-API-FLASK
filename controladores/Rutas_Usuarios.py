@@ -8,7 +8,7 @@ RutasDeUsuario = Blueprint('RutasDeUsuario', __name__)
 
 
 #REGISTRO DE USUARIO#
-@RutasDeUsuario.route('/Usuario/RegistroUsuario', methods = ['POST'])
+@RutasDeUsuario.route('/Usuario', methods = ['POST'])
 def RegistroNUsuario():
     
     #RECEPCIÓN DE DATOS#
@@ -41,7 +41,7 @@ def RegistroNUsuario():
         ), 201
 
 #INICIO SE SESIÓN#
-@RutasDeUsuario.route('/Usuario/InicioSesion', methods = ['POST'])
+@RutasDeUsuario.route('/Usuario/Autenticar', methods = ['POST'])
 def InicioSesion():
     
     #RECEPCIÓN DE DATOS#
@@ -71,7 +71,7 @@ def InicioSesion():
         return jsonify({"mensaje":"error al iniciar sesión, credenciales incorrectas o no se encuentra registrado", "status":"409"}), 409
 
 #EDICIÓN DE USUARIO - DATOS BÁSICOS#
-@RutasDeUsuario.route('/Usuario/EdicionUsuario', methods = ['PUT'])
+@RutasDeUsuario.route('/Usuario/Edicion', methods = ['PUT'])
 @jwt_required()
 def EdicionUsuario():
     
@@ -136,7 +136,7 @@ def EdicionClave():
         ), 409        
     
 #VER DATOS DEL USUARIO#
-@RutasDeUsuario.route('/Usuario/VerUsuario', methods = ['GET'])
+@RutasDeUsuario.route('/Usuario/Ver', methods = ['GET'])
 @jwt_required()
 def VerUsuario():
     
@@ -159,7 +159,7 @@ def VerUsuario():
     ), 200
     
 #ELIMINACIÓN DE USUARIO#
-@RutasDeUsuario.route('/Usuario/EliminarUsuario', methods = ['DELETE'])
+@RutasDeUsuario.route('/Usuario/Eliminar', methods = ['DELETE'])
 @jwt_required()
 def EliminarUsuario():
     
