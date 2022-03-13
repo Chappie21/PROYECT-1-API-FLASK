@@ -40,6 +40,36 @@ def RegistroNUsuario():
         status = "201"
         ), 201
 
+#INICIO SE SESIÓN#
+@RutasDeUsuario.route('/usuario/autenticar', methods = ['POST'])
+def InicioSesion():
+    
+    #RECEPCIÓN DE DATOS#
+    Datos = request.json
+    emailU = Datos['email']
+    claveU = Datos['clave']
+    
+    #VALIDACIÓN DE USUARIO E INFORMACIÓN#
+    
+    Usuario_Sesion = ModeloUsuario.objects(email = emailU).first()
+    if Usuario_Sesion is not None and ModeloUsuario.Verificar(Usuario_Sesion.clave, claveU):
+    
+        #SE CREA EL TOKEN DE VALIDACIÓN DE SESIÓN PARA EL USUARIO#
+        access_token = create_access_token(identity = Usuario_Sesion.email)
+        return jsonify(
+            access_token = access_token,
+            email = Usuario_Sesion.email,
+            nombre = Usuario_Sesion.nombre,
+            apellido = Usuario_Sesion.apellido,
+            fotoPerfil = Usuario_Sesion.fotoPerfil,
+            visibleEmail = Usuario_Sesion.visibleEmail,
+            visibleTop = Usuario_Sesion.visibleTop,
+            esAdmin = Usuario_Sesion.esAdmin,
+            status = "200"
+            ), 200
+    else:
+        return jsonify({"mensaje":"error al iniciar sesión, credenciales incorrectas o no se encuentra registrado", "status":"409"}), 409
+
 #EDICIÓN DE USUARIO - DATOS BÁSICOS#
 @RutasDeUsuario.route('/usuario', methods = ['PUT'])
 @jwt_required()
@@ -105,9 +135,47 @@ def EdicionClave():
             status = "409"
         ), 409        
     
+#VER DATOS DEL USUARIO#
+@RutasDeUsuario.route('/usuario', methods = ['GET'])
+@jwt_required()
+def VerUsuario():
     
+    #RECOLECCIÓN DE DATOS DEL USUARIO#
     
+    Usuario = ModeloUsuario.objects( email = get_jwt_identity()).first()
     
-
-
+    #PELÍCULAS QUE SIGUE EL USUARIO#
     
+    #COMENTARIOS MÁS RELEVANTES DEL USUARIO#
+    
+    return jsonify(
+        nombre = Usuario.nombre,
+        apellido = Usuario.apellido,
+        emailU = Usuario.email,
+        fotoPerfil = Usuario.fotoPerfil,
+        visibleTop = Usuario.visibleTop,
+        visibleEmail = Usuario.visibleEmail,
+        status = 200
+    ), 200
+    
+#ELIMINACIÓN DE USUARIO#
+@RutasDeUsuario.route('/usuario', methods = ['DELETE'])
+@jwt_required()
+def EliminarUsuario():
+    
+    #VERFICIACIÓN DEL USUARIO A ELIMINAR#
+    Usuario = ModeloUsuario.objects( email = get_jwt_identity()).first()
+    if Usuario:
+        
+        Usuario.delete()
+        return jsonify(
+            mensaje = "Se ha eliminado el usuario satisfactoriamente.",
+            status = "200"
+        )
+        
+    else:
+        
+        return jsonify(
+            mensaje = "El usuario no existe.",
+            status = "409"
+        )
