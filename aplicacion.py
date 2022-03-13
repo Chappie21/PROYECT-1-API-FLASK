@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 from flask import Flask
 from flask_jwt_extended import JWTManager
 from flask_mongoengine import MongoEngine
+from flask_cors import CORS
 from config import *
 
 #INSTANCIA Y CONFIGURACIÓN DE LA APLICACIÓN FLASK#
@@ -13,6 +14,9 @@ from config import *
 app = Flask(__name__)
 app.config.from_object(DevelopmentConfig)
 load_dotenv()
+
+# Habilitar CORS
+cors = CORS(app, supports_credentials = True)
 
 #CONFIGURACIÓN JWT#
 
@@ -29,10 +33,5 @@ BD = MongoEngine(app)
 #IMPORTACIÓN Y REGISTRO DE RUTAS MEDIANTE BLUEPRINTS#
 
 from controladores.Rutas_Usuarios import RutasDeUsuario
-from controladores.Rutas_Autenticacion import RutasDeAutenticacion
 
-app.register_blueprint(RutasDeUsuario)
-app.register_blueprint(RutasDeAutenticacion)
-
-
- 
+app.register_blueprint(RutasDeUsuario) 
