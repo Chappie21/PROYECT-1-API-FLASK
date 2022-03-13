@@ -32,7 +32,13 @@ def RegistroNUsuario():
         clave = ModeloUsuario.Encriptar(claveU)
     ).save()
     
-    return jsonify({"mensaje":"Usuario creado satisfactoriamente", "status":"201"}), 201
+    access_token = create_access_token(identity = NuevoUsuario.email)
+    
+    return jsonify(
+        mensaje = "Usuario creado satisfactoriamente",
+        access_token = access_token,
+        status = "201"
+        ), 201
 
 #INICIO SE SESIÓN#
 @RutasDeUsuario.route('/Usuario/InicioSesion', methods = ['POST'])
