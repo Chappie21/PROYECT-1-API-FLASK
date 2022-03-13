@@ -4,7 +4,7 @@ from flask import request, jsonify, Blueprint
 from modelos.Modelo_Usuarios import ModeloUsuario
 from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required
 
-RutasDeUsuario = Blueprint('RutasDeAutenticacion', __name__)
+RutasDeAutenticacion = Blueprint('RutasDeAutenticacion', __name__)
 
 #INICIO SE SESIÓN#
 @RutasDeUsuario.route('/autenticacion', methods = ['POST'])

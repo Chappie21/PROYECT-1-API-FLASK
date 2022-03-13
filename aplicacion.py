@@ -29,8 +29,10 @@ BD = MongoEngine(app)
 #IMPORTACIÓN Y REGISTRO DE RUTAS MEDIANTE BLUEPRINTS#
 
 from controladores.Rutas_Usuarios import RutasDeUsuario
+from controladores.Rutas_Autenticacion import RutasDeAutenticacion
 
 app.register_blueprint(RutasDeUsuario)
+app.register_blueprint(RutasDeAutenticacion)
 
 
  
