@@ -22,7 +22,7 @@ def RegistroNUsuario():
     
     Existencia_Usuario = ModeloUsuario.objects(email = emailU).first()
     if Existencia_Usuario:
-        return jsonify({'mensaje':'El usuario ya se encuentra registrado'}), 409
+        return jsonify({'mensaje':'El usuario ya se encuentra registrado', "status":"409"}), 409
     
     #CREACIÓN DE NUEVO USUARIO#
     NuevoUsuario = ModeloUsuario(
@@ -32,7 +32,13 @@ def RegistroNUsuario():
         clave = ModeloUsuario.Encriptar(claveU)
     ).save()
     
-    return jsonify({"mensaje":"Usuario creado satisfactoriamente"}), 201
+    access_token = create_access_token(identity = NuevoUsuario.email)
+    
+    return jsonify(
+        mensaje = "Usuario creado satisfactoriamente",
+        access_token = access_token,
+        status = "201"
+        ), 201
 
 #INICIO SE SESIÓN#
 @RutasDeUsuario.route('/Usuario/InicioSesion', methods = ['POST'])
@@ -93,21 +99,45 @@ def EdicionUsuario():
                 email = Usuario.email,
                 fotoPerfil = Usuario.fotoPerfil,
                 visibleEmail = Usuario.visibleEmail,
-                visibleTop = Usuario.visibleTop
+                visibleTop = Usuario.visibleTop,
+                status = "201"
             ), 201
 
+    else: 
+        return jsonify({'mensaje':"Usuario no encontrado", "status":"409"}), 409
+    
+#EDICIÓN DE CONTRASEÑA DE USUARIO#
+@RutasDeUsuario.route('/Usuario/EdicionClave', methods = ['PUT'])
+@jwt_required() 
+def EdicionClave():
+    
+    #RECEPCIÓN DE DATOS#
+    Datos = request.json
+    claveNueva = Datos['claveNueva']
+    claveAntigua = Datos['claveAntigua']
+    
+    Usuario = ModeloUsuario.objects(email = get_jwt_identity()).first()
+    
+    if claveNueva and ModeloUsuario.Verificar(Usuario.clave, claveAntigua):
+        
+        Usuario.update(clave = ModeloUsuario.Encriptar(claveNueva))
+        Usuario.reload()
+        
+        return jsonify(
+            mensaje = "Clave cambiada satisfactoriamente",
+            status = "201"
+        ), 201
+    
     else:
         
-        return jsonify({'mensaje':"Usuario no encontrado", "status":"409"}), 409
-        
+        return jsonify(
+            mensaje = "No se han llenado los campos o la contraseña actual es incorrecta.",
+            status = "409"
+        ), 409        
     
     
     
     
-    
-    
-        
-    return ""
 
 
     
