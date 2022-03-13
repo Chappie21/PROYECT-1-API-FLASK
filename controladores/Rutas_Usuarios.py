@@ -158,8 +158,27 @@ def VerUsuario():
         status = 200
     ), 200
     
+#ELIMINACIÓN DE USUARIO#
+@RutasDeUsuario.route('/Usuario/EliminarUsuario', methods = ['DELETE'])
+@jwt_required()
+def EliminarUsuario():
     
-    
+    #VERFICIACIÓN DEL USUARIO A ELIMINAR#
+    Usuario = ModeloUsuario.objects( email = get_jwt_identity()).first()
+    if Usuario:
+        
+        Usuario.delete()
+        return jsonify(
+            mensaje = "Se ha eliminado el usuario satisfactoriamente.",
+            status = "200"
+        )
+        
+    else:
+        
+        return jsonify(
+            mensaje = "El usuario no existe.",
+            status = "409"
+        )
     
     
     
