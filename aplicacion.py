@@ -8,6 +8,7 @@ from flask_jwt_extended import JWTManager
 from flask_mongoengine import MongoEngine
 from flask_cors import CORS
 from config import *
+import cloudinary
 
 #INSTANCIA Y CONFIGURACIÓN DE LA APLICACIÓN FLASK#
 
@@ -30,8 +31,12 @@ JWT = JWTManager(app)
 app.config['MONGODB_SETTINGS'] = {'host':os.getenv('URI_BBDD'), 'db':'Pelitacos_BD'}
 BD = MongoEngine(app)
 
-#IMPORTACIÓN Y REGISTRO DE RUTAS MEDIANTE BLUEPRINTS#
+# CONFIGURACION DE CLOUDINARY
+cloudinary.config(cloud_name = os.getenv('CLOUD_NAME'), api_key=os.getenv('API_KEY'), 
+    api_secret=os.getenv('API_SECRET'))
 
+
+#IMPORTACIÓN Y REGISTRO DE RUTAS MEDIANTE BLUEPRINTS#
 from controladores.Rutas_Usuarios import RutasDeUsuario
 
 app.register_blueprint(RutasDeUsuario) 
