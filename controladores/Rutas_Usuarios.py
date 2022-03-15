@@ -36,6 +36,13 @@ def RegistroNUsuario():
     
     return jsonify(
         mensaje = "Usuario creado satisfactoriamente",
+        email = NuevoUsuario.email,
+        nombre = NuevoUsuario.nombre,
+        apellido = NuevoUsuario.apellido,
+        fotoPerfil = NuevoUsuario.fotoPerfil,
+        visibleEmail = NuevoUsuario.visibleEmail,
+        visibleTop = NuevoUsuario.visibleTop,
+        esAdmin = NuevoUsuario.esAdmin,
         access_token = access_token,
         status = "201"
         ), 201
