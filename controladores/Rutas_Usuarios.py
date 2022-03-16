@@ -1,8 +1,10 @@
 #ESTE ARCHIVO DEFINE TODAS LAS RUTAS RELACIONADAS CON EL USUARIO#
 
 from flask import request, jsonify, Blueprint
+import jwt
 from modelos.Modelo_Usuarios import ModeloUsuario
 from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required
+from cloudinary import api, uploader
 
 RutasDeUsuario = Blueprint('RutasDeUsuario', __name__)
 
@@ -36,6 +38,13 @@ def RegistroNUsuario():
     
     return jsonify(
         mensaje = "Usuario creado satisfactoriamente",
+        email = NuevoUsuario.email,
+        nombre = NuevoUsuario.nombre,
+        apellido = NuevoUsuario.apellido,
+        fotoPerfil = NuevoUsuario.fotoPerfil,
+        visibleEmail = NuevoUsuario.visibleEmail,
+        visibleTop = NuevoUsuario.visibleTop,
+        esAdmin = NuevoUsuario.esAdmin,
         access_token = access_token,
         status = "201"
         ), 201
@@ -105,6 +114,39 @@ def EdicionUsuario():
 
     else: 
         return jsonify({'mensaje':"Usuario no encontrado", "status":"409"}), 409
+    
+#EDICIÓN DE FOTO DE PERFIL DE USUARIO#
+@RutasDeUsuario.route('/usuario/editarFoto', methods = ['POST'])
+@jwt_required()
+def EditarFoto_Usuario():
+    
+    #RECEPCIÓN DE FOTO DE PERFIL Y UBICACIÓN DEL USUARIO#
+    
+    Usuario = ModeloUsuario.objects(email = get_jwt_identity()).first()
+    fotoPerfilU = request.files['archivo']
+    
+    if fotoPerfilU:
+        
+        #GUARDADO DE LA FOTO DE PERFIL DEL USUARIO#
+        
+        subidaFoto = uploader.upload(fotoPerfilU, folder = f'Pelitacos/{Usuario.id}', public_id = ' fotoPerfil')
+        Usuario.update(fotoPerfil = subidaFoto['url'])
+        
+        return jsonify(
+            mensaje = "Se han guardado los cambios satisfactoriamente.",
+            status = "200",
+        ), 200
+    
+    else:
+        
+        return jsonify(
+            mensaje = "No ha seleccionado ningún archivo o el seleccionado no es válido.",
+            status = "400"
+        ), 400
+    
+    
+        
+
     
 #EDICIÓN DE CONTRASEÑA DE USUARIO#
 @RutasDeUsuario.route('/usuario/edicionClave', methods = ['PUT'])
