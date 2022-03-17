@@ -131,6 +131,7 @@ def EditarFoto_Usuario():
         
         subidaFoto = uploader.upload(fotoPerfilU, folder = f'Pelitacos/{Usuario.id}', public_id = ' fotoPerfil')
         Usuario.update(fotoPerfil = subidaFoto['url'])
+        Usuario.reload()
         
         return jsonify(
             mensaje = "Se han guardado los cambios satisfactoriamente.",

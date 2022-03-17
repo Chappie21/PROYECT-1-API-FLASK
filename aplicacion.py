@@ -38,5 +38,7 @@ cloudinary.config(cloud_name = os.getenv('CLOUD_NAME'), api_key=os.getenv('API_K
 
 # IMPORTACIÓN Y REGISTRO DE RUTAS MEDIANTE BLUEPRINTS #
 from controladores.Rutas_Usuarios import RutasDeUsuario
+from controladores.Rutas_Peliculas import RutasDePelicula
 
 app.register_blueprint(RutasDeUsuario) 
+app.register_blueprint(RutasDePelicula)
