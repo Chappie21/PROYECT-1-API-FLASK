@@ -1,12 +1,12 @@
 #ESTE ARCHIVO DEFINE TODAS LAS RUTAS RELACIONADAS CON EL USUARIO#
 
 from flask import request, jsonify, Blueprint
-import jwt
 from modelos.Modelo_Usuarios import ModeloUsuario
 from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required
 from cloudinary import api, uploader
 
 RutasDeUsuario = Blueprint('RutasDeUsuario', __name__)
+
 
 #REGISTRO DE USUARIO#
 @RutasDeUsuario.route('/usuario', methods = ['POST'])
@@ -37,6 +37,7 @@ def RegistroNUsuario():
     
     return jsonify(
         mensaje = "Usuario creado satisfactoriamente",
+        idUsuario = str(NuevoUsuario.id),
         email = NuevoUsuario.email,
         nombre = NuevoUsuario.nombre,
         apellido = NuevoUsuario.apellido,
@@ -47,6 +48,7 @@ def RegistroNUsuario():
         access_token = access_token,
         status = "201"
         ), 201
+
 
 #INICIO SE SESIÓN#
 @RutasDeUsuario.route('/usuario/autenticar', methods = ['POST'])
@@ -66,6 +68,7 @@ def InicioSesion():
         access_token = create_access_token(identity = Usuario_Sesion.email)
         return jsonify(
             access_token = access_token,
+            idUsuario = str(Usuario_Sesion.id),
             email = Usuario_Sesion.email,
             nombre = Usuario_Sesion.nombre,
             apellido = Usuario_Sesion.apellido,
@@ -77,7 +80,9 @@ def InicioSesion():
             ), 200
         
     else:
+        
         return jsonify({"mensaje":"error al iniciar sesión, credenciales incorrectas o no se encuentra registrado", "status":"409"}), 409
+
 
 #EDICIÓN DE USUARIO - DATOS BÁSICOS#
 @RutasDeUsuario.route('/usuario', methods = ['PUT'])
@@ -109,6 +114,7 @@ def EdicionUsuario():
     else: 
         return jsonify({'mensaje':"Usuario no encontrado", "status":"409"}), 409
     
+    
 #EDICIÓN DE FOTO DE PERFIL DE USUARIO#
 @RutasDeUsuario.route('/usuario/editarFoto', methods = ['POST'])
 @jwt_required()
@@ -139,9 +145,6 @@ def EditarFoto_Usuario():
         ), 400
     
     
-        
-
-    
 #EDICIÓN DE CONTRASEÑA DE USUARIO#
 @RutasDeUsuario.route('/usuario/edicionClave', methods = ['PUT'])
 @jwt_required() 
@@ -161,8 +164,7 @@ def EdicionClave():
         
         return jsonify(
             mensaje = "Clave cambiada satisfactoriamente",
-            status = "201"
-        ), 201
+            status = "201"), 201
     
     else:
         
@@ -193,6 +195,7 @@ def VerUsuario():
         status = 200
     ), 200
     
+    
 #ELIMINACIÓN DE USUARIO#
 @RutasDeUsuario.route('/usuario', methods = ['DELETE'])
 @jwt_required()
@@ -205,12 +208,10 @@ def EliminarUsuario():
         Usuario.delete()
         return jsonify(
             mensaje = "Se ha eliminado el usuario satisfactoriamente.",
-            status = "200"
-        )
-        
+            status = "200")  
+         
     else:
         
         return jsonify(
             mensaje = "El usuario no existe.",
-            status = "409"
-        )
+            status = "409")
