@@ -8,7 +8,6 @@ from cloudinary import api, uploader
 
 RutasDeUsuario = Blueprint('RutasDeUsuario', __name__)
 
-
 #REGISTRO DE USUARIO#
 @RutasDeUsuario.route('/usuario', methods = ['POST'])
 def RegistroNUsuario():
@@ -76,6 +75,7 @@ def InicioSesion():
             esAdmin = Usuario_Sesion.esAdmin,
             status = "200"
             ), 200
+        
     else:
         return jsonify({"mensaje":"error al iniciar sesión, credenciales incorrectas o no se encuentra registrado", "status":"409"}), 409
 
@@ -89,16 +89,13 @@ def EdicionUsuario():
     nombreU = Datos['nombre']
     apellidoU = Datos['apellido']
     emailU = Datos['email']
-    fotoPerfilU = Datos['fotoPerfil']
-    visibleEmailU = Datos['visibleEmail']
-    visibleTopU = Datos['visibleTop']
     
     #UBICACIÓN DEL USUARIO#
     Usuario = ModeloUsuario.objects(email = get_jwt_identity()).first()
     
     if Usuario is not None:
         
-        Usuario.update(nombre = nombreU, apellido = apellidoU, email = emailU, fotoPerfil = fotoPerfilU, visibleEmail = visibleEmailU, visibleTop = visibleTopU)
+        Usuario.update(nombre = nombreU, apellido = apellidoU, email = emailU)
         Usuario.reload()
         
         return jsonify(
@@ -106,9 +103,6 @@ def EdicionUsuario():
                 nombre = Usuario.nombre,
                 apellido = Usuario.apellido,
                 email = Usuario.email,
-                fotoPerfil = Usuario.fotoPerfil,
-                visibleEmail = Usuario.visibleEmail,
-                visibleTop = Usuario.visibleTop,
                 status = "201"
             ), 201
 
@@ -128,7 +122,6 @@ def EditarFoto_Usuario():
     if fotoPerfilU:
         
         #GUARDADO DE LA FOTO DE PERFIL DEL USUARIO#
-        
         subidaFoto = uploader.upload(fotoPerfilU, folder = f'Pelitacos/{Usuario.id}', public_id = ' fotoPerfil')
         Usuario.update(fotoPerfil = subidaFoto['url'])
         Usuario.reload()
@@ -184,7 +177,6 @@ def EdicionClave():
 def VerUsuario():
     
     #RECOLECCIÓN DE DATOS DEL USUARIO#
-    
     Usuario = ModeloUsuario.objects( email = get_jwt_identity()).first()
     
     #PELÍCULAS QUE SIGUE EL USUARIO#
