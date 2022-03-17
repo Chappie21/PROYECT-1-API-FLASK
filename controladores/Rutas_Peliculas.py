@@ -3,7 +3,7 @@
 from flask import request, jsonify, Blueprint
 from modelos.Modelo_Usuarios import ModeloUsuario
 from modelos.Modelo_Peliculas import ModeloPelicula
-from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required
+from flask_jwt_extended import jwt_required
 from cloudinary import api, uploader
 from datetime import datetime
 import time
@@ -76,8 +76,39 @@ def RegistroPelicula():
         idiomaPelicula = Pelicula.idioma,
         directorPelicula = Pelicula.director,
         duracionPelicula = Pelicula.duracion,
-        #estrenoPelicula = Pelicula.estreno,
+        estrenoPelicula = Pelicula.fechaEstreno,
         portadaPelicula = Pelicula.portada,
         descripcionPelicula = Pelicula.descripcion,
     ), 200
 
+
+# TABLÓN DE INICIO #
+@RutasDePelicula.route('/inicio', methods = ['GET'])
+#@jwt_required()
+def MostrarPeliculas():
+    # SE OBTIENEN LOS DATOS DE TODAS LAS PELÍCULAS A MOSTRAR EN EL TABLÓN DE INICIO #
+    try:
+        
+        Peliculas = []
+        
+        for pelicula in ModeloPelicula.objects().order_by('-fechaEstreno'):
+            
+            Peliculas.append({
+                'idPelicula': str(pelicula.id),
+                'nombre': pelicula.nombre,
+                'genero': pelicula.genero,
+                'calificacion': pelicula.calificacion,
+                'portada': pelicula.portada,
+                'estreno': pelicula.fechaEstreno
+                })
+        
+        return jsonify( mensaje = "Datos obtenidos satisfactoriamente.", datos = Peliculas, status = 200 ), 200
+    
+    except:    
+        
+        return jsonify(mensaje = "Error al recibir los datos de las películas.", status = "400"), 400
+    
+    #portadas = []
+            #if pelicula.portada is not None:
+             #   portadaPelicula = pelicula.portada
+              #  portadas.append(portadaPelicula)

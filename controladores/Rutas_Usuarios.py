@@ -204,14 +204,10 @@ def EliminarUsuario():
     #VERFICIACIÓN DEL USUARIO A ELIMINAR#
     Usuario = ModeloUsuario.objects( email = get_jwt_identity()).first()
     if Usuario:
-        
         Usuario.delete()
-        return jsonify(
-            mensaje = "Se ha eliminado el usuario satisfactoriamente.",
-            status = "200")  
+          
+        return jsonify(mensaje = "Se ha eliminado el usuario satisfactoriamente.", status = "200")  
          
     else:
         
-        return jsonify(
-            mensaje = "El usuario no existe.",
-            status = "409")
+        return jsonify(mensaje = "El usuario no existe.",status = "409")
