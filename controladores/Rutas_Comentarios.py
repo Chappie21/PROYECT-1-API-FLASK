@@ -54,14 +54,6 @@ def AgregarComentario(idPelicula):
         return jsonify(mensaje = "Comentario agregado satisfactoriamente.", status = 200), 200
         
         
-        
-    
-    
-     
-    
-    
-    
-    return ""
 
 
     
