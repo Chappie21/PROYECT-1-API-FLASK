@@ -108,7 +108,37 @@ def MostrarPeliculas():
         
         return jsonify(mensaje = "Error al recibir los datos de las películas.", status = "400"), 400
     
-    #portadas = []
-            #if pelicula.portada is not None:
-             #   portadaPelicula = pelicula.portada
-              #  portadas.append(portadaPelicula)
+    
+# VER PERFIL DE UNA PELÍCULA #    
+@RutasDePelicula.route('/peliculas/ver/<string:idPelicula>', methods = ['GET'])
+#jwt_required()
+def VerPelicula(idPelicula):
+    pelicula = ModeloPelicula.objects(id = idPelicula).first()
+    
+    if not pelicula: return jsonify(mensaje = "Película no encontrada.", status = 400), 400
+    
+    else:
+        #SE OBTIENEN LOS DATOS DE LA PELÍCULA DESEADA#
+        
+        if 'imagenes' in pelicula:
+            imagenesPelicula = []
+            
+            for imagen in pelicula.imagenes:
+                imagenesPelicula.append(imagen)
+                
+        return jsonify(
+            mensaje = "Datos obtenidos satisfactoriamente.",
+            status = "200",
+            nombre = pelicula.nombre,
+            genero = pelicula.genero,
+            idioma = pelicula.idioma,
+            director = pelicula.director,
+            duracion = pelicula.duracion,
+            fechaEstreno = pelicula.fechaEstreno,
+            trailers = pelicula.trailers,
+            imagenes = imagenesPelicula,
+            portada = pelicula.portada,
+            descripcion = pelicula.descripcion,
+            calificacion = pelicula.calificacion
+        ), 200
+
