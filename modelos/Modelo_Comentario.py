@@ -12,5 +12,5 @@ class ModeloComentario(BD.Document):
     usuario = BD.ReferenceField('ModeloUsuario', required = True, reverse_delete_rule = mongoengine.CASCADE)
     pelicula = BD.ReferenceField('ModeloPelicula', required = True, reverse_delete_rule = mongoengine.CASCADE)
     descripcion = BD.StringField(required = True)
-    fecha = BD.DateTimeField(datetime.datetime.now())
+    fecha = BD.DateTimeField(default = datetime.datetime.now())
     calificacion = BD.DecimalField( default = 0 )
