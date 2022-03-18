@@ -3,7 +3,7 @@
 from flask import request, jsonify, Blueprint
 from modelos.Modelo_Usuarios import ModeloUsuario
 from modelos.Modelo_Peliculas import ModeloPelicula
-from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required
+from flask_jwt_extended import jwt_required
 from cloudinary import api, uploader
 from datetime import datetime
 import time
@@ -76,8 +76,69 @@ def RegistroPelicula():
         idiomaPelicula = Pelicula.idioma,
         directorPelicula = Pelicula.director,
         duracionPelicula = Pelicula.duracion,
-        #estrenoPelicula = Pelicula.estreno,
+        estrenoPelicula = Pelicula.fechaEstreno,
         portadaPelicula = Pelicula.portada,
         descripcionPelicula = Pelicula.descripcion,
     ), 200
+
+
+# TABLÓN DE INICIO #
+@RutasDePelicula.route('/inicio', methods = ['GET'])
+#@jwt_required()
+def MostrarPeliculas():
+    # SE OBTIENEN LOS DATOS DE TODAS LAS PELÍCULAS A MOSTRAR EN EL TABLÓN DE INICIO #
+    try:
+        
+        Peliculas = []
+        
+        for pelicula in ModeloPelicula.objects().order_by('-fechaEstreno'):
+            
+            Peliculas.append({
+                'idPelicula': str(pelicula.id),
+                'nombre': pelicula.nombre,
+                'genero': pelicula.genero,
+                'calificacion': pelicula.calificacion,
+                'portada': pelicula.portada,
+                'estreno': pelicula.fechaEstreno
+                })
+        
+        return jsonify( mensaje = "Datos obtenidos satisfactoriamente.", datos = Peliculas, status = 200 ), 200
+    
+    except:    
+        
+        return jsonify(mensaje = "Error al recibir los datos de las películas.", status = "400"), 400
+    
+    
+# VER PERFIL DE UNA PELÍCULA #    
+@RutasDePelicula.route('/peliculas/ver/<string:idPelicula>', methods = ['GET'])
+#jwt_required()
+def VerPelicula(idPelicula):
+    pelicula = ModeloPelicula.objects(id = idPelicula).first()
+    
+    if not pelicula: return jsonify(mensaje = "Película no encontrada.", status = 400), 400
+    
+    else:
+        #SE OBTIENEN LOS DATOS DE LA PELÍCULA DESEADA#
+        
+        if 'imagenes' in pelicula:
+            imagenesPelicula = []
+            
+            for imagen in pelicula.imagenes:
+                imagenesPelicula.append(imagen)
+                
+        return jsonify(
+            mensaje = "Datos obtenidos satisfactoriamente.",
+            status = "200",
+            nombre = pelicula.nombre,
+            genero = pelicula.genero,
+            idioma = pelicula.idioma,
+            director = pelicula.director,
+            duracion = pelicula.duracion,
+            fechaEstreno = pelicula.fechaEstreno,
+            trailers = pelicula.trailers,
+            imagenes = imagenesPelicula,
+            portada = pelicula.portada,
+            descripcion = pelicula.descripcion,
+            calificacion = pelicula.calificacion
+        ), 200
 
