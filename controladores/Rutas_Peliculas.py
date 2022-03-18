@@ -12,7 +12,7 @@ RutasDePelicula = Blueprint('RutasDePelicula', __name__)
 
 # AGREGAR NUEVA PELÍCULA #
 @RutasDePelicula.route('/peliculas', methods = ['POST'])
-#@jwt_required()
+@jwt_required()
 def RegistroPelicula():
     
     Datos = request.form
@@ -84,7 +84,7 @@ def RegistroPelicula():
 
 # TABLÓN DE INICIO #
 @RutasDePelicula.route('/inicio', methods = ['GET'])
-#@jwt_required()
+@jwt_required()
 def MostrarPeliculas():
     # SE OBTIENEN LOS DATOS DE TODAS LAS PELÍCULAS A MOSTRAR EN EL TABLÓN DE INICIO #
     try:
@@ -111,7 +111,7 @@ def MostrarPeliculas():
     
 # VER PERFIL DE UNA PELÍCULA #    
 @RutasDePelicula.route('/peliculas/ver/<string:idPelicula>', methods = ['GET'])
-#jwt_required()
+@jwt_required()
 def VerPelicula(idPelicula):
     pelicula = ModeloPelicula.objects(id = idPelicula).first()
     
