@@ -170,7 +170,7 @@ def EdicionClave():
         
         return jsonify(
             mensaje = "No se han llenado los campos o la contraseña actual es incorrecta.",
-            status = "409"
+            status = "400"
         ), 409        
     
 #VER DATOS DEL USUARIO#
@@ -210,4 +210,4 @@ def EliminarUsuario():
          
     else:
         
-        return jsonify(mensaje = "El usuario no existe.",status = "409")
+        return jsonify(mensaje = "El usuario no existe.", status = "409")

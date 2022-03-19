@@ -3,6 +3,7 @@
 from flask import request, jsonify, Blueprint
 from modelos.Modelo_Usuarios import ModeloUsuario
 from modelos.Modelo_Peliculas import ModeloPelicula
+from modelos.Modelo_Comentario import ModeloComentario
 from flask_jwt_extended import jwt_required
 from cloudinary import api, uploader
 from datetime import datetime
@@ -114,6 +115,7 @@ def MostrarPeliculas():
 @jwt_required()
 def VerPelicula(idPelicula):
     pelicula = ModeloPelicula.objects(id = idPelicula).first()
+    Comentarios = ModeloComentario.objects(pelicula = idPelicula)
     
     if not pelicula: return jsonify(mensaje = "Película no encontrada.", status = 400), 400
     
@@ -125,7 +127,17 @@ def VerPelicula(idPelicula):
             
             for imagen in pelicula.imagenes:
                 imagenesPelicula.append(imagen)
-                
+            
+        comentariosPelicula = []    
+        if Comentarios:
+            for comentario in Comentarios:
+                comentariosPelicula.append({
+                    'nombre': comentario.usuario.nombre,
+                    'apellido': comentario.usuario.apellido,
+                    'descripcion': comentario.descripcion,
+                    'calificacion': comentario.calificacion
+                })
+               
         return jsonify(
             mensaje = "Datos obtenidos satisfactoriamente.",
             status = "200",
@@ -139,6 +151,31 @@ def VerPelicula(idPelicula):
             imagenes = imagenesPelicula,
             portada = pelicula.portada,
             descripcion = pelicula.descripcion,
-            calificacion = pelicula.calificacion
+            calificacion = pelicula.calificacion,
+            comentarios = comentariosPelicula
         ), 200
 
+
+# BUSCAR PELÍCULA POR SU NOMBRE #
+@RutasDePelicula.route('/buscarPelicula/<string:nombrePelicula>', methods = ['GET'])
+@jwt_required()
+def BuscarPelicula(nombrePelicula):
+    
+    # VALIDACIÓN DE EXISTENCIA - BÚSQUEDA DE PELÍCULA #
+    Resultado = ModeloPelicula.objects(nombre = nombrePelicula).first()
+    if not Resultado:
+        
+        return jsonify(mensaje = "Película no encontrada", status = "409"), 409
+    
+    else: 
+        
+        return jsonify(
+            mensaje = "Se ha encontrado coincidencia satisfactoriamente.",
+            status = "200",
+            nombre = Resultado.nombre,
+            portada = Resultado.portada,
+            genero = Resultado.genero
+        ), 200
+   
+        
+        
